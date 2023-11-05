@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 from django.urls import reverse_lazy
 from rest_framework import status
 from rest_framework.response import Response
@@ -70,3 +70,8 @@ class CreateDocumentView(CreateView):
     form_class = DocumentForm
     template_name = "document_form.html"
     success_url = reverse_lazy("document-list")
+
+class DocumentDetailView(DetailView):
+    model = Document
+    template_name = 'document_detail.html'
+    context_object_name = 'document'
