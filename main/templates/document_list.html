@@ -5,7 +5,8 @@
 <ul>
     {% for document in documents %}
     <li>
-        <a href="{% url 'document-detail' document.pk %}">{{ document.title }}</a>
+        <a href="{% url 'detail' document.pk %}">{{ document.title }}</a>
+        <a href="{% url 'edit' document.pk %}">(Edit)</a>
     </li>
     {% endfor %}
 </ul>
