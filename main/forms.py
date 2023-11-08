@@ -7,4 +7,4 @@ class DocumentForm(forms.ModelForm):
         fields = ['title', 'content', 'content_format']
 
 class SearchForm(forms.Form):
-    query = forms.CharField(max_length=500, label='Search Sentence')
+    query = forms.CharField(max_length=500, label='')

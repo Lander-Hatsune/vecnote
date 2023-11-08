@@ -78,7 +78,7 @@ class EditDocumentView(CreateDocumentView, UpdateView):
 
 
 class SearchView(View):
-    template_name = "search_results.html"
+    template_name = "search_form.html"
 
     def get(self, request):
         form = SearchForm()
@@ -91,7 +91,7 @@ class SearchView(View):
             search_vector = embed(query)
             results = Document.objects.order_by(
                 CosineDistance("embedding", search_vector)
-            ).annotate(similarity=CosineDistance("embedding", search_vector))
+            ).annotate(similarity=1 - CosineDistance("embedding", search_vector))
 
             return render(
                 request, self.template_name, {"form": form, "results": results}
