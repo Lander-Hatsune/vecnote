@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{ document.title }}</h1>
-    <a href="{% url 'edit' document.pk %}">(Edit)</a>
-    <p>{{ document.html_content | safe }}</p>
+<h1>{{ document.title }}</h1>
+<p class="subtitle is-size-7">
+    <a href="{% url 'edit' document.pk %}">Edit</a>
+    &nbsp;|&nbsp;
+    Created: {{ document.created_at|date:"Y-m-d" }}
+    &nbsp;|&nbsp;
+    Last Modified: {{ document.modified_at|date:"Y-m-d H:i" }}
+    &nbsp;|&nbsp;
+    <a href="{% url 'delete' document.pk %}">Delete</a>
+</p>
+<p>{{ document.html_content | safe }}</p>
 {% endblock %}

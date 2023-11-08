@@ -5,29 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}VecNote{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="{% url 'search' %}">Search</a></li>
-                <li><a href="{% url 'list' %}">Document List</a></li>
-                <li><a href="{% url 'create' %}">Create Document</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <div class="content">
-            {% block content %}
-            {% endblock %}
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <strong class="navbar-item">VecNote</strong>
+            <a class="navbar-item" href="{% url 'search' %}">Search</a>
+            <a class="navbar-item" href="{% url 'list' %}">Document List</a>
+            <a class="navbar-item" href="{% url 'create' %}">Create Document</a>
         </div>
-    </main>
+    </nav>
 
-    <footer>
-        <!-- Footer content goes here -->
-    </footer>
+    <section class="section">
+        <div class="container">
+            <div class="content">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </section>
+
 </body>
 
 </html>

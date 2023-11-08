@@ -1,7 +1,13 @@
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, View
+from django.views.generic import (
+    ListView,
+    CreateView,
+    DetailView,
+    UpdateView,
+    View,
+)
 from django.urls import reverse_lazy
 from rest_framework import status
 from rest_framework.response import Response
