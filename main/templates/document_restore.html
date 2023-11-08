@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Restore Document</h1>
+<p>Do you want to restore the document "{{ object.title }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Restore</button>
+</form>
+{% endblock %}

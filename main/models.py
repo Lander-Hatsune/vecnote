@@ -19,9 +19,14 @@ class Document(models.Model):
     )
     md_content = models.TextField(editable=False)
     html_content = models.TextField(editable=False)
+    
     embedding = VectorField(dimensions=1024)
+    
     created_at = models.DateField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
+    modified_at = models.DateTimeField(editable=False)
+    
+    is_trashed = models.BooleanField(default=False)
+    trashed_at = models.DateTimeField(editable=False, null=True, blank=True)
 
     def __str__(self):
         return f"Document{{self.title}}"

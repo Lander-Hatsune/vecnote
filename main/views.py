@@ -1,5 +1,5 @@
-from django.forms.models import BaseModelForm
-from django.http import HttpResponse
+from typing import Any
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import (
     ListView,
@@ -8,15 +8,12 @@ from django.views.generic import (
     UpdateView,
     View,
 )
+from django.utils import timezone
 from django.urls import reverse_lazy
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from pgvector.django import CosineDistance
 
 from .models import Document
 from .forms import DocumentForm, SearchForm
-from .serializers import DocumentSerializer
 
 import logging
 import zhipuai
@@ -43,7 +40,15 @@ class DocumentListView(ListView):
     model = Document
     template_name = "document_list.html"
     context_object_name = "documents"
-
+    def get_queryset(self):
+        return Document.objects.filter(is_trashed=False)
+     
+class TrashbinView(ListView):
+    model = Document
+    template_name = 'trashbin.html'
+    context_object_name = "trashed_documents"
+    def get_queryset(self):
+        return Document.objects.filter(is_trashed=True)
 
 class CreateDocumentView(CreateView):
     model = Document
@@ -69,6 +74,7 @@ class CreateDocumentView(CreateView):
         form.instance.embedding = embed(
             form.instance.title + ":" + form.instance.md_content
         )
+        form.instance.modified_at = timezone.now()
         return super().form_valid(form)
 
 
@@ -81,6 +87,37 @@ class DocumentDetailView(DetailView):
 class EditDocumentView(CreateDocumentView, UpdateView):
     template_name = "document_edit_form.html"
     pass
+
+class DeleteDocumentView(View):
+    template_name = 'document_delete.html'
+    context_object_name = "document"
+
+    def get(self, request, pk):
+        document = Document.objects.get(pk=pk)
+        return render(request, self.template_name, {'document': document})
+
+    def post(self, request, pk):
+        document = Document.objects.get(pk=pk)
+        if document.is_trashed:
+            document.delete()
+        else:
+            document.is_trashed = True
+            document.trashed_at = timezone.now()
+            document.save()
+
+        return HttpResponseRedirect(reverse_lazy('list'))
+
+    
+class RestoreDocumentView(UpdateView):
+    model = Document
+    template_name = 'document_restore.html'
+    fields = ['is_trashed']
+    success_url = reverse_lazy('trashbin')
+
+    def form_valid(self, form):
+        form.instance.is_deleted = False
+        form.instance.save()
+        return super().form_valid(form)
 
 
 class SearchView(View):

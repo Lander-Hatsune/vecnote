@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Trash Bin</h1>
+<ul>
+    {% for document in trashed_documents %}
+    <li>
+        {{ document.title }}
+        &nbsp;|&nbsp;
+        <a href="{% url 'delete' document.pk %}">(Delete)</a>
+        <a href="{% url 'restore' document.pk %}">(Restore)</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
