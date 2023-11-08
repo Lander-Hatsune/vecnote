@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Search Results</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">Search</button>
+</form>
+<ul>
+    {% for result in results %}
+    <li>
+        <a href="{{ result.get_absolute_url }}">{{ result.title }}</a>
+        (Similarity: {{ result.similarity }})
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
