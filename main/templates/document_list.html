@@ -6,7 +6,12 @@
     {% for document in documents %}
     <li>
         <a href="{% url 'detail' document.pk %}">{{ document.title }}</a>
-        <a href="{% url 'edit' document.pk %}">(Edit)</a>
+        &nbsp;|&nbsp;
+        Last Modified: {{ document.modified_at|date:"Y-m-d H:i" }}
+        &nbsp;|&nbsp;
+        <a href="{% url 'edit' document.pk %}">Edit</a>
+        &nbsp;
+        <a href="{% url 'delete' document.pk %}">Delete</a>
     </li>
     {% endfor %}
 </ul>

@@ -48,7 +48,7 @@ class TrashbinView(ListView):
     template_name = 'trashbin.html'
     context_object_name = "trashed_documents"
     def get_queryset(self):
-        return Document.objects.filter(is_trashed=True)
+        return Document.objects.filter(is_trashed=True).order_by("-trashed_at")
 
 class CreateDocumentView(CreateView):
     model = Document

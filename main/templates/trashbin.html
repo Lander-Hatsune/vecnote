@@ -7,8 +7,11 @@
     <li>
         {{ document.title }}
         &nbsp;|&nbsp;
-        <a href="{% url 'delete' document.pk %}">(Delete)</a>
-        <a href="{% url 'restore' document.pk %}">(Restore)</a>
+        Trashed: {{ document.trashed_at|date:"Y-m-d" }}
+        &nbsp;|&nbsp;
+        <a href="{% url 'delete' document.pk %}">Delete</a>
+        &nbsp;
+        <a href="{% url 'restore' document.pk %}">Restore</a>
     </li>
     {% endfor %}
 </ul>
