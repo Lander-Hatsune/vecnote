@@ -27,9 +27,13 @@ SECRET_KEY = secret.DJANGO_KEY
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    secret.HOST_IP
+    secret.HOST_IP,
+    '127.0.0.1',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    f"http://{secret.HOST_IP}",
+]
 
 # Application definition
 
