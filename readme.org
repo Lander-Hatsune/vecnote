@@ -1,38 +1,39 @@
 #+begin_quote
-Under development...
+New features coming!
 #+end_quote
 
 * Vecnote
 
-Everyday notes in vector database.
+- Document management with vector embeddings
+- Everyday note in vector database.
+  
+* Features
+
+- auto embed documents (zhipuai key needed)
+- vector based search
+- basic document management: add/update/trash&restore
+
+* Tech stack
+
+- vector embeddings: Django + PostgreSQL&pgvector + zhipuai
+- static pages: Django + pandoc + org/latex/typst...
+- deployment: Django (runserver + nginx, or anything)
 
 * TBD
 
-- [-] 添加
-  - [X] 基本功能
-  - [-] 添加成功的反馈, 延时跳转
-
-- [-] 文档展示
-- [-] 删除
-- [-] 修改
-- [-] 列表展示
-- [-] 查找和过滤
+- [X] 添加
+- [X] 文档展示
+- [X] 删除
+- [X] 修改
+- [X] 列表展示
+- [X] 查找
+- [-] 过滤
 - [-] Clustering/Auto Categorize
 
-* 架构
+* Ref list
 
-** 后端
-
-- 向量部分: Django + PostgreSQL + pgvector_python
-- 静态部分: Django + pandoc
+- [[https://www.djangoproject.com/][Django]]
+- [[https://www.postgresql.org/][PostgreSQL]] & [[https://github.com/pgvector/pgvector][pgvector]] & [[pgvector_python][https://github.com/pgvector/pgvector-python]]
+- [[https://pandoc.org/][Pandoc]]
+- [[https://open.bigmodel.cn/dev/api][智谱 AI 开放平台(zhipuai)]]
   
-** 前端
-
-Django + html/js(暂时实现)
-
-- 添加编辑删除, 日期记录
-  - +Org 自动转为 Html+
-  - +Txt 保持+
-  - Pandoc
-- 查找
-- 加密
