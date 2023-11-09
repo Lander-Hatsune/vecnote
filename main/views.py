@@ -1,4 +1,4 @@
-from typing import Any
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import (
@@ -36,24 +36,37 @@ def embed(s):
     return embed
 
 
+class LoginRequired(LoginRequiredMixin):
+    login_url = "/admin/"
+
+
 class DocumentListView(ListView):
     model = Document
     template_name = "document_list.html"
     context_object_name = "documents"
+
     def get_queryset(self):
-        return Document.objects.filter(is_trashed=False)
-     
+        return Document.objects.filter(is_trashed=False).order_by("-modified_at")
+
+
 class TrashbinView(ListView):
     model = Document
-    template_name = 'trashbin.html'
+    template_name = "trashbin.html"
     context_object_name = "trashed_documents"
+
     def get_queryset(self):
         return Document.objects.filter(is_trashed=True).order_by("-trashed_at")
 
-class CreateDocumentView(CreateView):
+
+class DocumentDetailView(LoginRequired, DetailView):
+    model = Document
+    template_name = "document_detail.html"
+    context_object_name = "document"
+
+
+class CreateEditBaseView(LoginRequired):
     model = Document
     form_class = DocumentForm
-    template_name = "document_create_form.html"
 
     def get_success_url(self):
         return reverse_lazy("detail", args=[self.object.pk])
@@ -78,23 +91,21 @@ class CreateDocumentView(CreateView):
         return super().form_valid(form)
 
 
-class DocumentDetailView(DetailView):
-    model = Document
-    template_name = "document_detail.html"
-    context_object_name = "document"
+class CreateDocumentView(CreateEditBaseView, CreateView):
+    template_name = "document_create_form.html"
 
 
-class EditDocumentView(CreateDocumentView, UpdateView):
+class EditDocumentView(CreateEditBaseView, UpdateView):
     template_name = "document_edit_form.html"
-    pass
 
-class DeleteDocumentView(View):
-    template_name = 'document_delete.html'
+
+class DeleteDocumentView(LoginRequired, View):
+    template_name = "document_delete.html"
     context_object_name = "document"
 
     def get(self, request, pk):
         document = Document.objects.get(pk=pk)
-        return render(request, self.template_name, {'document': document})
+        return render(request, self.template_name, {"document": document})
 
     def post(self, request, pk):
         document = Document.objects.get(pk=pk)
@@ -105,14 +116,14 @@ class DeleteDocumentView(View):
             document.trashed_at = timezone.now()
             document.save()
 
-        return HttpResponseRedirect(reverse_lazy('list'))
+        return HttpResponseRedirect(reverse_lazy("list"))
 
-    
-class RestoreDocumentView(UpdateView):
+
+class RestoreDocumentView(LoginRequired, UpdateView):
     model = Document
-    template_name = 'document_restore.html'
-    fields = ['is_trashed']
-    success_url = reverse_lazy('trashbin')
+    template_name = "document_restore.html"
+    fields = ["is_trashed"]
+    success_url = reverse_lazy("trashbin")
 
     def form_valid(self, form):
         form.instance.is_deleted = False
@@ -120,7 +131,7 @@ class RestoreDocumentView(UpdateView):
         return super().form_valid(form)
 
 
-class SearchView(View):
+class SearchView(LoginRequired, View):
     template_name = "search_form.html"
 
     def get(self, request):
