@@ -1,10 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Restore Document</h1>
-<p>Do you want to restore the document "{{ object.title }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Restore</button>
-</form>
+<div class="section">
+    <div class="container">
+        <h1 class="title">Restore Document</h1>
+        <p class="subtitle">Do you want to restore the document "<strong>{{ object.title }}</strong>"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="field is-grouped">
+                <div class="control">
+                    <button type="submit" class="button is-success">Restore</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

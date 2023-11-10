@@ -1,10 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Confirm Deletion</h1>
-<p>Are you sure you want to delete the document "<strong>{{ document.title }}</strong>"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Delete</button>
-</form>
+<div class="section">
+    <div class="container">
+        <h1 class="title">Confirm Deletion</h1>
+        <p class="subtitle">Are you sure you want to delete the document "<strong>{{ document.title }}</strong>"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="field is-grouped">
+                <div class="control">
+                    <button type="submit" class="button is-danger">Delete</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
