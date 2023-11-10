@@ -17,3 +17,7 @@ class SearchForm(forms.Form):
         widget=forms.TextInput(attrs={"class": "input"}),
         label="",
     )
+    query_type = forms.ChoiceField(
+        choices=[("vector", "Vector embedding"), ("text", "Full text")],
+        label="",
+    )

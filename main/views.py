@@ -11,6 +11,7 @@ from django.views.generic import (
 from django.utils import timezone
 from django.urls import reverse_lazy
 from pgvector.django import CosineDistance
+from django.db.models import Q
 
 from .models import Document
 from .forms import DocumentForm, SearchForm
@@ -142,11 +143,16 @@ class SearchView(LoginRequired, View):
         form = SearchForm(request.POST)
         if form.is_valid():
             query = form.cleaned_data["query"]
-            search_vector = embed(query)
-            results = Document.objects.order_by(
-                CosineDistance("embedding", search_vector)
-            ).annotate(similarity=1 - CosineDistance("embedding", search_vector))
-
+            query_type = form.cleaned_data["query_type"]
+            if query_type == "vector":
+                search_vector = embed(query)
+                results = Document.objects.order_by(
+                    CosineDistance("embedding", search_vector)
+                ).annotate(similarity=1 - CosineDistance("embedding", search_vector))
+            else:
+                results = Document.objects.filter(
+                    Q(title__icontains=query) | Q(content__icontains=query)
+                )
             return render(
                 request, self.template_name, {"form": form, "results": results}
             )

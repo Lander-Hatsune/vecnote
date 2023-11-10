@@ -7,9 +7,11 @@
         <form method="post">
             {% csrf_token %}
             <div class="field has-addons">
-                <div class="control is-expanded">
-                    {{ form.query.label_tag }}
+                <form method="get">
                     {{ form.query }}
+                </form>
+                <div class="select">
+                    {{ form.query_type }}
                 </div>
                 <div class="control">
                     <button type="submit" class="button is-info">Search</button>
@@ -19,8 +21,10 @@
         <ul class="mt-4">
             {% for result in results %}
             <li>
-                <a href="{{ result.get_absolute_url }}">{{ result.title }}</a>
+                <a href="{% url 'detail' result.pk %}">{{ result.title }}</a>
+                {% if result.similarity %}
                 (Similarity: {{ result.similarity }})
+                {% endif %}
             </li>
             {% endfor %}
         </ul>
