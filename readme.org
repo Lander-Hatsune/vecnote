@@ -18,7 +18,7 @@ New features coming!
 * Tech stack
 
 - vector embeddings: Django + PostgreSQL&pgvector + zhipuai
-- static pages: Django + pandoc + org/latex/typst...
+- static pages: Bulma + Django + pandoc + org/latex/typst...
 - deployment: Django (runserver + nginx, or anything)
 
 * TBD
@@ -35,7 +35,9 @@ New features coming!
 * Ref list
 
 - [[https://www.djangoproject.com/][Django]]
-- [[https://www.postgresql.org/][PostgreSQL]] & [[https://github.com/pgvector/pgvector][pgvector]] & [[pgvector_python][https://github.com/pgvector/pgvector-python]]
+- [[https://www.postgresql.org/][PostgreSQL]] & [[https://github.com/pgvector/pgvector][pgvector]] & [[https://github.com/pgvector/pgvector-python][pgvector_python]]
 - [[https://pandoc.org/][Pandoc]]
 - [[https://open.bigmodel.cn/dev/api][智谱 AI 开放平台(zhipuai)]]
+- [[https://bulma.io/][Bulma]]
+- [[https://chat.openai.com/][ChatGPT]]
   
