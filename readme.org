@@ -31,6 +31,10 @@ New features coming!
 - [X] 查找
 - [-] 过滤
 - [-] Clustering/Auto Categorize
+  - Visualization
+- [-] Important date reminder
+- [-] Sticky note
+  - Just a "pinned" document
 
 * Ref list
 
