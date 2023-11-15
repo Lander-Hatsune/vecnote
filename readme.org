@@ -21,21 +21,6 @@ New features coming!
 - static pages: Bulma + Django + pandoc + org/latex/typst...
 - deployment: Django (runserver + nginx, or anything)
 
-* TBD
-
-- [X] 添加
-- [X] 文档展示
-- [X] 删除
-- [X] 修改
-- [X] 列表展示
-- [X] 查找
-- [-] 过滤
-- [-] Clustering/Auto Categorize
-  - Visualization
-- [-] Important date reminder
-- [-] Sticky note
-  - Just a "pinned" document
-
 * Ref list
 
 - [[https://www.djangoproject.com/][Django]]
@@ -44,4 +29,37 @@ New features coming!
 - [[https://open.bigmodel.cn/dev/api][智谱 AI 开放平台(zhipuai)]]
 - [[https://bulma.io/][Bulma]]
 - [[https://chat.openai.com/][ChatGPT]]
-  
+- [[https://github.com/karlicoss/orgparse][orgparse]]  
+
+* TBD
+
+- [X] 添加
+- [X] 文档展示
+- [X] 删除
+- [X] 修改
+- [X] 列表展示
+- [X] 查找
+  - [X] 过滤
+- [-] 调整 目录 UI
+- [-] =never-embed=
+- [-] Pinned note
+  - "Homepage": pinned & list
+  - "list": full list
+  - =pinned_at=
+  - never embed
+- [-] GTD system
+  - "Todos" (similar to =org-agenda-week-view= and =org-todo-list=)
+    | \                |                           |             <r> |              <r> |
+    | In <days-left>   | <TODO> <task-title(link)> | <parent-titles> | <filename(link)> |
+    |------------------+---------------------------+-----------------+------------------|
+    | farther than 30d |                           |                 |                  |
+    |------------------+---------------------------+-----------------+------------------|
+    | In <days-left>   | <TODO> <task-title(link)> | <parent-titles> | <filename(link)> |
+  - =todos-within=
+  - [-] extract TODOs from todos org document
+  - [-] sort one day's todo, and all todos
+  - Important date reminder in one todos document
+- [-] Clustering/Auto Categorize
+  - Visualization
+- [-] User quarantine
+    
