@@ -41,7 +41,7 @@ New features coming!
 - [X] 查找
   - [X] 过滤
 - [X] 调整 目录 UI
-- [-] =never-embed=
+- [X] =never-embed=
 - [X] Pinned note
   - "Homepage": pinned & list
   - "list": full list
