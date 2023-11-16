@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="section">
+    <div class="container">
+        <h1 class="title">Confirm Pin</h1>
+        <p class="subtitle">Are you sure you want to pin the document "<strong>{{ document.title }}</strong>"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="field is-grouped">
+                <div class="control">
+                    <button type="submit" class="button is-success">Pin</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

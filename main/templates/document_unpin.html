@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="section">
+    <div class="container">
+        <h1 class="title">Unpin Document</h1>
+        <p class="subtitle">Do you want to unpin the document "<strong>{{ object.title }}</strong>"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="field is-grouped">
+                <div class="control">
+                    <button type="submit" class="button is-success">Unpin</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

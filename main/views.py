@@ -1,5 +1,7 @@
+from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.forms.models import BaseModelForm
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import (
     ListView,
@@ -40,8 +42,21 @@ def embed(s):
 class LoginRequired(LoginRequiredMixin):
     login_url = "/admin/"
 
+class HomeView(LoginRequired, ListView):
+    model = Document
+    template_name = "home.html"
+    context_object_name = "documents"
 
-class DocumentListView(ListView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["documents"] = {
+            "recent": Document.objects.filter(is_trashed=False).order_by("-modified_at")[:10],
+            "pinned": Document.objects.filter(is_pinned=True).order_by("-pinned_at"),
+        }
+        print(context["documents"])
+        return context
+
+class DocumentListView(LoginRequired, ListView):
     model = Document
     template_name = "document_list.html"
     context_object_name = "documents"
@@ -50,7 +65,7 @@ class DocumentListView(ListView):
         return Document.objects.filter(is_trashed=False).order_by("-modified_at")
 
 
-class TrashbinView(ListView):
+class TrashbinView(LoginRequired, ListView):
     model = Document
     template_name = "trashbin.html"
     context_object_name = "trashed_documents"
@@ -65,7 +80,7 @@ class DocumentDetailView(LoginRequired, DetailView):
     context_object_name = "document"
 
 
-class CreateEditBaseView(LoginRequired):
+class CreateEditBaseView:
     model = Document
     form_class = DocumentForm
 
@@ -92,11 +107,11 @@ class CreateEditBaseView(LoginRequired):
         return super().form_valid(form)
 
 
-class CreateDocumentView(CreateEditBaseView, CreateView):
+class CreateDocumentView(LoginRequired, CreateEditBaseView, CreateView):
     template_name = "document_create_form.html"
 
 
-class EditDocumentView(CreateEditBaseView, UpdateView):
+class EditDocumentView(LoginRequired, CreateEditBaseView, UpdateView):
     template_name = "document_edit_form.html"
 
 
@@ -108,7 +123,7 @@ class DeleteDocumentView(LoginRequired, View):
         document = Document.objects.get(pk=pk)
         return render(request, self.template_name, {"document": document})
 
-    def post(self, request, pk):
+    def post(self, _, pk):
         document = Document.objects.get(pk=pk)
         if document.is_trashed:
             document.delete()
@@ -128,6 +143,31 @@ class RestoreDocumentView(LoginRequired, UpdateView):
 
     def form_valid(self, form):
         form.instance.is_deleted = False
+        form.instance.save()
+        return super().form_valid(form)
+
+
+class PinDocumentView(LoginRequired, UpdateView):
+    model = Document
+    template_name = "document_pin.html"
+    context_object_name = "document"
+    fields = ["is_pinned"]
+    success_url = reverse_lazy("home")
+
+    def form_valid(self, form):
+        form.instance.is_pinned = True
+        form.instance.save()
+        return super().form_valid(form)
+
+
+class UnpinDocumentView(LoginRequired, UpdateView):
+    model = Document
+    template_name = "document_unpin.html"
+    fields = ["is_pinned"]
+    success_url = reverse_lazy("home")
+
+    def form_valid(self, form):
+        form.instance.is_pinned = False
         form.instance.save()
         return super().form_valid(form)
 

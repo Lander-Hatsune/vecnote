@@ -7,6 +7,12 @@
     &nbsp;|&nbsp;
     Last Modified: {{ document.modified_at|date:"Y-m-d H:i" }}
     &nbsp;|&nbsp;
+    {% if document.is_pinned %}
+    <a href="{% url 'unpin' document.pk %}">Unpin</a>
+    {% else %}
+    <a href="{% url 'pin' document.pk %}">Pin</a>
+    {% endif %}
+    &nbsp;
     <a href="{% url 'edit' document.pk %}">Edit</a>
     &nbsp;
     <a href="{% url 'delete' document.pk %}">Delete</a>

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Pinned Notes</h1>
+{% for document in documents.pinned %}
+<div class="box">
+    <h1><a href="{% url 'detail' document.pk %}">{{ document.title }}</a></h1>
+    <p class="subtitle is-size-7">
+        Created: {{ document.created_at|date:"Y-m-d" }}
+        &nbsp;|&nbsp;
+        Last Modified: {{ document.modified_at|date:"Y-m-d H:i" }}
+        &nbsp;|&nbsp;
+        <a href="{% url 'unpin' document.pk %}">Unpin</a>
+    </p>
+    <p>{{ document.html_content | safe }}</p>
+</div>
+{% endfor %}
+
+<h1>Recent Notes</h1>
+<ul>
+    {% for document in documents.recent %}
+    <li>
+        <a href="{% url 'detail' document.pk %}">{{ document.title }}</a>
+        &nbsp;|&nbsp;
+        Last Modified: {{ document.modified_at|date:"Y-m-d H:i" }}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
