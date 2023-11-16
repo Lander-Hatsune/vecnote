@@ -42,6 +42,7 @@ def embed(s):
 class LoginRequired(LoginRequiredMixin):
     login_url = "/admin/"
 
+
 class HomeView(LoginRequired, ListView):
     model = Document
     template_name = "home.html"
@@ -50,11 +51,14 @@ class HomeView(LoginRequired, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["documents"] = {
-            "recent": Document.objects.filter(is_trashed=False).order_by("-modified_at")[:10],
+            "recent": Document.objects.filter(is_trashed=False).order_by(
+                "-modified_at"
+            )[:10],
             "pinned": Document.objects.filter(is_pinned=True).order_by("-pinned_at"),
         }
         print(context["documents"])
         return context
+
 
 class DocumentListView(LoginRequired, ListView):
     model = Document
@@ -99,10 +103,10 @@ class CreateEditBaseView:
             input=form.instance.content,
             text=True,
         )
-
-        form.instance.embedding = embed(
-            form.instance.title + ":" + form.instance.md_content
-        )
+        if form.instance.do_embed:
+            form.instance.embedding = embed(
+                form.instance.title + ":" + form.instance.md_content
+            )
         form.instance.modified_at = timezone.now()
         return super().form_valid(form)
 

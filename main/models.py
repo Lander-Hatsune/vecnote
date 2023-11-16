@@ -20,7 +20,7 @@ class Document(models.Model):
     md_content = models.TextField(editable=False)
     html_content = models.TextField(editable=False)
     
-    never_embed = models.BooleanField(default=False)
+    do_embed = models.BooleanField(default=True)
     embedding = VectorField(dimensions=1024, null=True, blank=True)
     
     created_at = models.DateField(auto_now_add=True)
