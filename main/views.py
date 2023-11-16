@@ -20,6 +20,7 @@ from .forms import DocumentForm, SearchForm
 
 import logging
 import zhipuai
+import orgparse as op
 import subprocess
 from vecnote.secret import API_KEY
 
@@ -38,6 +39,22 @@ def embed(s):
         log.error(f"embedding fetch failed!, {resp}")
     return embed
 
+
+def check_todo(content, filename):
+    org = op.loads(content)
+    nodes = org.env.nodes
+    todos = []
+    for node in nodes:
+        if node.todo == "TODO":
+            todos.append(
+                {
+                    "deadline": node.deadline.start.isoformat(),
+                    "title": node.heading,
+                    "tags": node.tags,
+                    "filename": filename
+                }
+            )
+    return todos
 
 class LoginRequired(LoginRequiredMixin):
     login_url = "/admin/"
@@ -107,6 +124,7 @@ class CreateEditBaseView:
             form.instance.embedding = embed(
                 form.instance.title + ":" + form.instance.md_content
             )
+
         form.instance.modified_at = timezone.now()
         return super().form_valid(form)
 
@@ -201,3 +219,17 @@ class SearchView(LoginRequired, View):
                 request, self.template_name, {"form": form, "results": results}
             )
         return render(request, self.template_name, {"form": form})
+
+
+class TodosView(LoginRequired, View):
+    model = Document
+    template_name = "todos.html"
+    context_object_name = "todos"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        todos = []
+        for d in Document.objects.filter(check_todos=True):
+            todos += check_todo(d.content, d.title)
+        context["todos"] = todos
+        return context

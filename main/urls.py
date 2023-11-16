@@ -13,4 +13,5 @@ urlpatterns = [
     path("unpin/<int:pk>/", views.UnpinDocumentView.as_view(), name="unpin"),
     path("trashbin/", views.TrashbinView.as_view(), name="trashbin"),
     path("search/", views.SearchView.as_view(), name="search"),
+    path("todos/", views.TodosView.as_view(), name="todos"),
 ]

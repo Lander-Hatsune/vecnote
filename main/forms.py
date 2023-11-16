@@ -8,7 +8,7 @@ class DocumentForm(forms.ModelForm):
 
     class Meta:
         model = Document
-        fields = ["title", "content", "content_format", "do_embed"]
+        fields = ["title", "content", "content_format", "do_embed", "check_todo"]
 
 
 class SearchForm(forms.Form):
