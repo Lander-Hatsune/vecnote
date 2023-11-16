@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Todos</h1>
+<table class="table is-fullwidth">
+    <thead>
+        <tr>
+            <th>In</th>
+            <th>Deadline</th>
+            <th>Task</th>
+            <th class="has-text-right">Tags</th>
+            <th class="has-text-right">From note</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for todo in todos %}
+        <tr class="{{ todo.css_class }}">
+            <td>{{ todo.in }} d.</td>
+            <td>{{ todo.deadline }}</td>
+            <td>{{ todo.title }}</td>
+            <td class="has-text-right">{{ todo.tags }}</td>
+            <td class="has-text-right"><a href="{% url 'detail' todo.pk %}">{{ todo.filename }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

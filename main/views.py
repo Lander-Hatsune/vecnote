@@ -21,6 +21,7 @@ from .forms import DocumentForm, SearchForm
 import logging
 import zhipuai
 import orgparse as op
+import datetime as dt
 import subprocess
 from vecnote.secret import API_KEY
 
@@ -40,18 +41,29 @@ def embed(s):
     return embed
 
 
-def check_todo(content, filename):
+def check_todo(content, filename, pk):
     org = op.loads(content)
-    nodes = org.env.nodes
+    nodes = org.env.nodes[1:]
     todos = []
+
+    def urge_color(timediff):
+        if timediff <= dt.timedelta(days=1):
+            return "has-background-danger-light"
+        if timediff <= dt.timedelta(days=7):
+            return "has-background-warning-light"
+
     for node in nodes:
         if node.todo == "TODO":
+            timediff = node.deadline.start - dt.datetime.now().date()
             todos.append(
                 {
-                    "deadline": node.deadline.start.isoformat(),
+                    "in": timediff.days,
+                    "deadline": node.deadline.start,
                     "title": node.heading,
-                    "tags": node.tags,
-                    "filename": filename
+                    "tags": "; ".join(node.tags),
+                    "filename": filename,
+                    "pk": pk,
+                    "css_class": urge_color(timediff)
                 }
             )
     return todos
@@ -73,7 +85,6 @@ class HomeView(LoginRequired, ListView):
             )[:10],
             "pinned": Document.objects.filter(is_pinned=True).order_by("-pinned_at"),
         }
-        print(context["documents"])
         return context
 
 
@@ -221,7 +232,7 @@ class SearchView(LoginRequired, View):
         return render(request, self.template_name, {"form": form})
 
 
-class TodosView(LoginRequired, View):
+class TodosView(LoginRequired, ListView):
     model = Document
     template_name = "todos.html"
     context_object_name = "todos"
@@ -229,7 +240,8 @@ class TodosView(LoginRequired, View):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         todos = []
-        for d in Document.objects.filter(check_todos=True):
-            todos += check_todo(d.content, d.title)
+        for d in Document.objects.filter(check_todo=True):
+            todos += check_todo(d.content, d.title, d.pk)
+        todos.sort(key=lambda x: x["in"])
         context["todos"] = todos
         return context
