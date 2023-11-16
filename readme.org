@@ -40,9 +40,9 @@ New features coming!
 - [X] 列表展示
 - [X] 查找
   - [X] 过滤
-- [-] 调整 目录 UI
+- [X] 调整 目录 UI
 - [-] =never-embed=
-- [-] Pinned note
+- [X] Pinned note
   - "Homepage": pinned & list
   - "list": full list
   - =pinned_at=
