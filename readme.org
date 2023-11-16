@@ -47,7 +47,7 @@ New features coming!
   - "list": full list
   - =pinned_at=
   - never embed
-- [-] GTD system
+- [X] GTD system
   - "Todos" (similar to =org-agenda-week-view= and =org-todo-list=)
     | \                |                           |             <r> |              <r> |
     | In <days-left>   | <TODO> <task-title(link)> | <parent-titles> | <filename(link)> |
@@ -56,9 +56,14 @@ New features coming!
     |------------------+---------------------------+-----------------+------------------|
     | In <days-left>   | <TODO> <task-title(link)> | <parent-titles> | <filename(link)> |
   - =todos-within=
-  - [-] extract TODOs from todos org document
-  - [-] sort one day's todo, and all todos
+  - [X] extract TODOs from todos org document
+  - [X] sort one day's todo, and all todos
   - Important date reminder in one todos document
+
+- [-] GTD interface
+  - allow checking an item in the list
+    - flag DONE / change DDL to next loop
+
 - [-] Clustering/Auto Categorize
   - Visualization
 - [-] User quarantine
