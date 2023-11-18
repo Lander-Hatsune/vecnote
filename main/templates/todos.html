@@ -15,11 +15,13 @@
     <tbody>
         {% for todo in todos %}
         <tr class="{{ todo.css_class }}">
-            <td>{{ todo.in }} d.</td>
+            <td>{{ todo.in_day }} d.</td>
             <td>{{ todo.deadline }}</td>
             <td>{{ todo.title }}</td>
             <td class="has-text-right">{{ todo.tags }}</td>
-            <td class="has-text-right"><a href="{% url 'detail' todo.pk %}">{{ todo.filename }}</a></td>
+            <td class="has-text-right">
+                <a href="{% url 'detail' todo.document.pk %}/#{{ todo.cleaned_title }}">{{ todo.document.title }}</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

@@ -13,11 +13,12 @@ from django.views.generic import (
 from django.utils import timezone
 from django.urls import reverse_lazy
 from pgvector.django import CosineDistance
-from django.db.models import Q
+from django.db.models import Q, F
 
-from .models import Document
+from .models import Document, TodoItem
 from .forms import DocumentForm, SearchForm
 
+import re
 import logging
 import zhipuai
 import orgparse as op
@@ -41,7 +42,7 @@ def embed(s):
     return embed
 
 
-def check_todo(content, filename, pk):
+def check_todo(content, document):
     org = op.loads(content)
     nodes = org.env.nodes[1:]
     todos = []
@@ -51,22 +52,27 @@ def check_todo(content, filename, pk):
             return "has-background-danger-light"
         if timediff <= dt.timedelta(days=7):
             return "has-background-warning-light"
+        
+    def clean_str(s):
+        return re.sub('[^A-Za-z0-9\.\w]+', '-', s).lower()
 
     for node in nodes:
         if node.todo == "TODO":
             timediff = node.deadline.start - dt.datetime.now().date()
             todos.append(
                 {
-                    "in": timediff.days,
+                    "in_day": timediff.days,
                     "deadline": node.deadline.start,
                     "title": node.heading,
                     "tags": "; ".join(node.tags),
-                    "filename": filename,
-                    "pk": pk,
-                    "css_class": urge_color(timediff)
+                    "document": document,
+                    "linum": node.linenumber,
+                    "css_class": urge_color(timediff),
+                    "cleaned_title": clean_str(node.heading),
                 }
             )
     return todos
+
 
 class LoginRequired(LoginRequiredMixin):
     login_url = "/admin/"
@@ -233,15 +239,20 @@ class SearchView(LoginRequired, View):
 
 
 class TodosView(LoginRequired, ListView):
-    model = Document
+    model = TodoItem
     template_name = "todos.html"
     context_object_name = "todos"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        todos = []
+    def get_queryset(self):
+        TodoItem.objects.all().delete()
         for d in Document.objects.filter(check_todo=True):
-            todos += check_todo(d.content, d.title, d.pk)
-        todos.sort(key=lambda x: x["in"])
-        context["todos"] = todos
-        return context
+            todos = check_todo(d.content, d)
+            for todo in todos:
+                TodoItem.objects.create(**todo)
+        return TodoItem.objects.order_by("in_day")
+
+
+class UpdateTodoItemView(LoginRequired, UpdateView):
+    model = Document
+    template_name = "todo_update.html"
+    fields = ["content", "md_content", "html_content"]
