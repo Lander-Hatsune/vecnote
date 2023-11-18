@@ -2,11 +2,9 @@ from django import forms
 from django.db import models
 from pgvector.django import VectorField
 
-# Create your models here.
-
 
 class Document(models.Model):
-    title = models.CharField(max_length=500)
+    title = models.CharField(max_length=255)
     content = models.TextField()
     content_format = models.CharField(
         max_length=20,
@@ -37,3 +35,17 @@ class Document(models.Model):
 
     def __str__(self):
         return f"Document{{self.title}}"
+
+
+class TodoItem(models.Model):
+    in_day = models.IntegerField()
+    deadline = models.DateTimeField()
+    title = models.CharField(max_length=255)
+    tags = models.CharField(max_length=255)
+    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    css_class = models.CharField(max_length=50, null=True)
+    linum = models.IntegerField()
+    cleaned_title = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"TodoItem{{self.title}}"
