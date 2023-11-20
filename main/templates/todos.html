@@ -17,7 +17,7 @@
         <tr class="{{ todo.css_class }}">
             <td>{{ todo.in_day }} d.</td>
             <td>{{ todo.deadline }}</td>
-            <td>{{ todo.title }}</td>
+            <td><a href="{% url 'update_todo' todo.pk %}">{{ todo.title }}</a></td>
             <td class="has-text-right">{{ todo.tags }}</td>
             <td class="has-text-right">
                 <a href="{% url 'detail' todo.document.pk %}/#{{ todo.cleaned_title }}">{{ todo.document.title }}</a>

@@ -56,7 +56,7 @@ def check_todo(content, document):
     def clean_str(s):
         return re.sub('[^A-Za-z0-9\.\w]+', '-', s).lower()
 
-    for node in nodes:
+    for idx, node in enumerate(nodes):
         if node.todo == "TODO":
             timediff = node.deadline.start - dt.datetime.now().date()
             todos.append(
@@ -66,7 +66,7 @@ def check_todo(content, document):
                     "title": node.heading,
                     "tags": "; ".join(node.tags),
                     "document": document,
-                    "linum": node.linenumber,
+                    "node_idx": idx,
                     "css_class": urge_color(timediff),
                     "cleaned_title": clean_str(node.heading),
                 }
@@ -253,6 +253,43 @@ class TodosView(LoginRequired, ListView):
 
 
 class UpdateTodoItemView(LoginRequired, UpdateView):
-    model = Document
-    template_name = "todo_update.html"
-    fields = ["content", "md_content", "html_content"]
+
+    model = TodoItem
+    template_name = "todoitem_update.html"
+    fields = []
+    success_url = reverse_lazy("todos")
+    
+    def form_valid(self, form):
+        todo_item: TodoItem = form.instance
+        document = todo_item.document
+
+        org = op.loads(document.content)
+        node: op.OrgNode = org.env.nodes[1 + todo_item.node_idx]
+        linum = node.linenumber - 1
+
+        lines = document.content.split("\n")
+        cur_time_str = dt.datetime.now().strftime("%Y-%m-%d %a %H:%M")
+        if not node.deadline._repeater: # change to DONE
+            lines[linum] = lines[linum].replace("TODO", "DONE")
+            lines[linum + 1] = f"CLOSED: [{cur_time_str}]" + lines[linum + 1]
+        else: # shift to next deadline
+            cur_ddl = node.deadline.start
+            cur_ddl_str = cur_ddl.strftime("%Y-%m-%d %a")
+            repeater = node.deadline._repeater
+            if repeater[-1] == "w":
+                repeat_delta = dt.timedelta(weeks=repeater[-2])
+            elif repeater[-1] == "m":
+                repeat_delta = dt.timedelta(days=repeater[-2] * 30)
+            elif repeater[-1] == "y":
+                repeat_delta = dt.timedelta(days=repeater[-2] * 365)
+            next_ddl = cur_ddl + repeat_delta
+            next_ddl_str = next_ddl.strftime("%Y-%m-%d %a")
+            lines[linum + 1] = lines[linum + 1].replace(cur_ddl_str, next_ddl_str)
+            lines.insert(linum + 2, f'- State "DONE"       from "TODO"       [{cur_time_str}]')
+            pass
+        document.content = "\n".join(lines)
+        document.save()
+        return super().form_valid(form)
+            
+
+

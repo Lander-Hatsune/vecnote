@@ -44,7 +44,7 @@ class TodoItem(models.Model):
     tags = models.CharField(max_length=255)
     document = models.ForeignKey(Document, on_delete=models.CASCADE)
     css_class = models.CharField(max_length=50, null=True)
-    linum = models.IntegerField()
+    node_idx = models.IntegerField()
     cleaned_title = models.CharField(max_length=255)
 
     def __str__(self):

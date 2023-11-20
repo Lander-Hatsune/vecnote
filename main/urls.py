@@ -14,4 +14,5 @@ urlpatterns = [
     path("trashbin/", views.TrashbinView.as_view(), name="trashbin"),
     path("search/", views.SearchView.as_view(), name="search"),
     path("todos/", views.TodosView.as_view(), name="todos"),
+    path("update_todo/<int:pk>", views.UpdateTodoItemView.as_view(), name="update_todo"),
 ]
