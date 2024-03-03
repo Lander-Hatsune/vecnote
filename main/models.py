@@ -1,9 +1,13 @@
 from django import forms
 from django.db import models
 from pgvector.django import VectorField
+from taggit.managers import TaggableManager
 
 
 class Document(models.Model):
+    class Meta:
+        ordering = ("-modified_at",)
+
     title = models.CharField(max_length=255)
     content = models.TextField()
     content_format = models.CharField(
@@ -32,6 +36,8 @@ class Document(models.Model):
 
     is_pinned = models.BooleanField(default=False)
     pinned_at = models.DateTimeField(editable=False, null=True, blank=True)
+
+    tags = TaggableManager(help_text="", blank=True)
 
     def __str__(self):
         return f"Document{{self.title}}"

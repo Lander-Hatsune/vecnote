@@ -1,0 +1,23 @@
+<ul>
+    {% for document in documents %}
+    <li>
+        <a href="{% url 'detail' document.pk %}">{{ document.title }}</a>
+        <div class="subtitle is-size-7">
+            {% for tag in document.tags.all %}
+            <a class="tag is-primary is-light" href="{% url 'tag-detail' tag.slug %}">{{ tag }}</a>
+            {% endfor %}
+            Last Modified: {{ document.modified_at|date:"Y-m-d H:i" }}
+            &nbsp;|&nbsp;
+            {% if document.is_pinned %}
+            <a href="{% url 'unpin' document.pk %}">Unpin</a>
+            {% else %}
+            <a href="{% url 'pin' document.pk %}">Pin</a>
+            {% endif %}
+            &nbsp;
+            <a href="{% url 'edit' document.pk %}">Edit</a>
+            &nbsp;
+            <a href="{% url 'delete' document.pk %}">Delete</a>
+        </div>
+    </li>
+    {% endfor %}
+</ul>

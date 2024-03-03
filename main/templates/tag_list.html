@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Tags List</h1>
+<div class="field is-grouped is-grouped-multiline">
+    {% for tag in tags %}
+    <span class="control">
+        <div class="tags has-addons">
+            <a class="tag is-primary is-light" href="{% url 'tag-detail' tag.slug %}">{{ tag }}</a>
+            <span class="tag">{{ tag.cnt }}</span>
+        </div>
+    </span>
+    {% endfor %}
+</div>
+{% endblock %}

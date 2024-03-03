@@ -16,14 +16,6 @@
 </div>
 {% endfor %}
 
-<h1>Recent Notes</h1>
-<ul>
-    {% for document in documents.recent %}
-    <li>
-        <a href="{% url 'detail' document.pk %}">{{ document.title }}</a>
-        &nbsp;|&nbsp;
-        Last Modified: {{ document.modified_at|date:"Y-m-d H:i" }}
-    </li>
-    {% endfor %}
-</ul>
+<h1><a href="{% url 'list' %}">Recent Notes</a></h1>
+{% include "document_list_snippet.html" with documents=documents.recent %}
 {% endblock %}

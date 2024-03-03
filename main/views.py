@@ -13,10 +13,11 @@ from django.views.generic import (
 from django.utils import timezone
 from django.urls import reverse_lazy
 from pgvector.django import CosineDistance
-from django.db.models import Q, F
+from django.db.models import Q, F, Count
 
 from .models import Document, TodoItem
 from .forms import DocumentForm, SearchForm
+from taggit.models import Tag
 
 import re
 import logging
@@ -86,9 +87,7 @@ class HomeView(LoginRequired, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["documents"] = {
-            "recent": Document.objects.filter(is_trashed=False).order_by(
-                "-modified_at"
-            )[:10],
+            "recent": Document.objects.filter(is_trashed=False)[:10],
             "pinned": Document.objects.filter(is_pinned=True).order_by("-pinned_at"),
         }
         return context
@@ -100,7 +99,7 @@ class DocumentListView(LoginRequired, ListView):
     context_object_name = "documents"
 
     def get_queryset(self):
-        return Document.objects.filter(is_trashed=False).order_by("-modified_at")
+        return Document.objects.filter(is_trashed=False)
 
 
 class TrashbinView(LoginRequired, ListView):
@@ -291,3 +290,23 @@ class UpdateTodoItemView(LoginRequired, UpdateView):
         document.save()
         return super().form_valid(form)
             
+
+class TagListView(LoginRequired, ListView):
+    model = Tag
+    template_name = "tag_list.html"
+    context_object_name = "tags"
+
+    def get_queryset(self):
+        return Tag.objects.all().annotate(cnt=Count("document"))
+
+
+class TagDetailView(LoginRequired, DetailView):
+    model = Tag
+    template_name = "tag_detail.html"
+    context_object_name = "tag"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tag = self.get_object()
+        context['documents'] = Document.objects.filter(is_trashed=False, tags__name__in=[tag]).distinct()
+        return context

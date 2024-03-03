@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'main',
     'dbbackup',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # dbbackup
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': secret.BACKUP_DIR}
+
+TAGGIT_CASE_INSENSITIVE = True

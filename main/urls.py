@@ -15,4 +15,6 @@ urlpatterns = [
     path("search/", views.SearchView.as_view(), name="search"),
     path("todos/", views.TodosView.as_view(), name="todos"),
     path("update_todo/<int:pk>", views.UpdateTodoItemView.as_view(), name="update_todo"),
+    path("tag/", views.TagListView.as_view(), name="tag-list"),
+    path("tag/<slug:slug>/", views.TagDetailView.as_view(), name="tag-detail"),
 ]

@@ -2,7 +2,10 @@
 
 {% block content %}
 <h1>{{ document.title }}</h1>
-<p class="subtitle is-size-7">
+<div class="block subtitle is-size-7">
+    {% for tag in document.tags.all %}
+    <a class="tag is-primary is-light" href="{% url 'tag-detail' tag.slug %}">{{ tag }}</a>
+    {% endfor %}
     Created: {{ document.created_at|date:"Y-m-d" }}
     &nbsp;|&nbsp;
     Last Modified: {{ document.modified_at|date:"Y-m-d H:i" }}
@@ -16,6 +19,7 @@
     <a href="{% url 'edit' document.pk %}">Edit</a>
     &nbsp;
     <a href="{% url 'delete' document.pk %}">Delete</a>
-</p>
-<p>{{ document.html_content | safe }}</p>
+</div>
+<div class="block">{{ document.html_content | safe }}</div>
+<hr>
 {% endblock %}
