@@ -292,4 +292,12 @@ class UpdateTodoItemView(LoginRequired, UpdateView):
         return super().form_valid(form)
             
 
-
+class IllegalView():
+    def get(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        with open("illegal-access-ips.txt", "a+") as f:
+            f.write(f"{ip}\n")
