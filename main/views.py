@@ -304,7 +304,7 @@ class TagListView(LoginRequired, ListView):
     context_object_name = "tags"
 
     def get_queryset(self):
-        return Tag.objects.all().annotate(cnt=Count("document"))
+        return Tag.objects.filter(document__is_trashed=False).annotate(cnt=Count("document"))
 
 
 class TagDetailView(LoginRequired, DetailView):
