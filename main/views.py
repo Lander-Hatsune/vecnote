@@ -134,7 +134,7 @@ class CreateEditBaseView:
     def form_valid(self, form):
         iformat = form.instance.content_format
         form.instance.html_content = subprocess.check_output(
-            ["pandoc", "--from", iformat, "--to", "html"],
+            ["pandoc", "--from", iformat, "--to", "html", "--number-sections"],
             input=form.instance.content,
             text=True,
         )
