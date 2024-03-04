@@ -3,5 +3,17 @@
 {% block content %}
 <h1>Notes List</h1>
 {% include "document_list_snippet.html" %}
+<nav class="pagination" role="navigation">
+    <ul class="pagination-list">
+        {% for pn in elided_page_range %}
+        {% if pn == page_obj.number %}
+        <li><a class="pagination-link is-current">{{ pn }}</a></li>
+        {% elif pn == paginator.ELLIPSIS %}
+        <span class="pagination-ellipsis">&hellip;</span>
+        {% else %}
+        <li><a class="pagination-link" href="?page={{ pn }}">{{ pn }}</a></li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
 {% endblock %}
-

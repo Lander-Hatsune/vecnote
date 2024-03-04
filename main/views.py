@@ -97,6 +97,13 @@ class DocumentListView(LoginRequired, ListView):
     model = Document
     template_name = "document_list.html"
     context_object_name = "documents"
+    paginate_by = 50
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page = context['page_obj']
+        context["elided_page_range"] = page.paginator.get_elided_page_range(page.number, on_ends=1)
+        return context
 
     def get_queryset(self):
         return Document.objects.filter(is_trashed=False)
