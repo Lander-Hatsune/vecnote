@@ -221,27 +221,30 @@ class SearchView(LoginRequired, View):
     template_name = "search_form.html"
 
     def get(self, request):
-        form = SearchForm()
-        return render(request, self.template_name, {"form": form})
-
-    def post(self, request):
-        form = SearchForm(request.POST)
+        form = SearchForm(request.GET or None)
+        results = []
+        
         if form.is_valid():
             query = form.cleaned_data["query"]
             query_type = form.cleaned_data["query_type"]
+            
             if query_type == "vector":
                 search_vector = embed(query)
                 results = Document.objects.order_by(
                     CosineDistance("embedding", search_vector)
-                ).annotate(similarity=1 - CosineDistance("embedding", search_vector))
+                ).annotate(
+                    similarity=1 - CosineDistance("embedding", search_vector)
+                )
             else:
                 results = Document.objects.filter(
                     Q(title__icontains=query) | Q(content__icontains=query)
                 )
-            return render(
-                request, self.template_name, {"form": form, "results": results}
-            )
-        return render(request, self.template_name, {"form": form})
+
+        return render(
+            request,
+            self.template_name,
+            {"form": form, "results": results}
+        )
 
 
 class TodosView(LoginRequired, ListView):

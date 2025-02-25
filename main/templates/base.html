@@ -9,12 +9,24 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/googlecode.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         pre>code {
             font-family: "Sans Mono", "Consolas", "Courier", monospace;
         }
+        .navbar {
+            border-bottom: 1px solid #eee;
+        }
+        .scroll-top {
+            position: fixed;
+            bottom: 31px;
+            right: 31px;
+            font-size: 24px;
+            text-decoration: none;
+        }
     </style>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
     <script>hljs.highlightAll();</script>
@@ -23,16 +35,60 @@
 <body>
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="{% url 'home' %}"><strong>VecNote</strong></a>
-            <a class="navbar-item" href="{% url 'list' %}">List</a>
-            <a class="navbar-item" href="{% url 'todos' %}">Todos</a>
-            <a class="navbar-item" href="{% url 'create' %}">Create</a>
-            <a class="navbar-item" href="{% url 'search' %}">Search</a>
+            <a class="navbar-item" href="{% url 'home' %}">
+                <strong>VecNote</strong>
+            </a>
+            
+            <!-- 导航图标 -->
+            <a class="navbar-item" href="{% url 'list' %}" title="All Notes">
+                <span class="icon"><i class="fas fa-list"></i></span>
+            </a>
+            
+            <a class="navbar-item" href="{% url 'todos' %}" title="Todos">
+                <span class="icon"><i class="fas fa-check-square"></i></span>
+            </a>
+            
+            <a class="navbar-item" href="{% url 'create' %}" title="New Note">
+                <span class="icon"><i class="fas fa-plus"></i></span>
+            </a>
+
+            <!-- 简化搜索表单 -->
+            <div class="navbar-item">
+                <form action="{% url 'search' %}" method="get">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input 
+                                class="input"
+                                type="text" 
+                                name="query" 
+                                value="{{ request.GET.query }}"
+                                placeholder="Search"
+                            >
+                            <input type="hidden" name="query_type" value="text">
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-borderless">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 简化下拉菜单 -->
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">[+]</a>
-                <div class="navbar-dropdown">
-                    <a class="navbar-item" href="{% url 'tag-list' %}">Tags</a>
-                    <a class="navbar-item" href="{% url 'trashbin' %}">Trashbin</a>
+                <a class="navbar-link">
+                    <i class="fas fa-ellipsis-h"></i>
+                </a>
+                <div class="navbar-dropdown is-right">
+                    <a class="navbar-item" href="{% url 'tag-list' %}">
+                        <i class="fas fa-tag"></i>
+                        <span>Tags</span>
+                    </a>
+                    <a class="navbar-item" href="{% url 'trashbin' %}">
+                        <i class="fas fa-trash"></i>
+                        <span>Trash</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -47,10 +103,8 @@
         </div>
     </section>
 
-    <a href="#" class="" aria-label="Scroll to top"
-        style="position: fixed; bottom: 31px; right: 31px; font-size: 24px;">
-        &uarr;
-    </a>
-</body>
+    <!-- 极简滚动按钮 -->
+    <a href="#" class="scroll-top" aria-label="Scroll to top">↑</a>
 
+</body>
 </html>

@@ -4,8 +4,7 @@
 <h1>Search</h1>
 <div class="section">
     <div class="container">
-        <form method="post">
-            {% csrf_token %}
+        <form method="get">  <!-- 改为GET方法 -->
             <div class="field has-addons">
                 <p class="control">
                     <span class="select">
@@ -13,21 +12,21 @@
                     </span>
                 </p>
                 <p class="control is-expanded">
-                    <form method="get">
-                        {{ form.query }}
-                    </form>
+                    {{ form.query }}  <!-- 直接显示查询输入框 -->
                 </p>
                 <p class="control">
                     <button type="submit" class="button is-info">Search</button>
                 </p>
             </div>
         </form>
+
+        <!-- 结果展示部分保持不变 -->
         <ul class="mt-4">
             {% for result in results %}
             <li>
                 <a href="{% url 'detail' result.pk %}">{{ result.title }}</a>
                 {% if result.similarity %}
-                (Similarity: {{ result.similarity }})
+                (Similarity: {{ result.similarity|floatformat:3 }})
                 {% endif %}
             </li>
             {% endfor %}
